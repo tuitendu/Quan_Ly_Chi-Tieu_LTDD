@@ -1,0 +1,187 @@
+# Ung dung Quan ly Chi tieu - Dark Mode
+
+## Y tuong tong the
+
+App giup nguoi dung co gang tiet kiem moi thang bang cach ghi lai luong, chi phi co dinh, chi phi phat sinh theo ngay. So du hien thi la tong lương tất cả tháng trừ tổng tất cả chi tiêu đã ghi nhận.
+
+---
+
+## Cac loai du lieu
+
+### Chi phi co dinh (fixed)
+- La nhung khoan chi tra hang thang: tien tro, dien nuoc, internet, xang xe, v.v.
+- Gan theo THANG hien tai - user tu nhap lai moi thang neu muon ghi nhan.
+- Luu vao SQLite voi category = "fixed", date = "yyyy-MM" (vi du: 2026-03).
+- Tab CHI PHI CO DINH chi hien fixed cua THANG HIEN TAI.
+- Thang sau neu them khoan co dinh moi -> chi tinh tu thang do tro di.
+- getTotalBalanceAllTime() cong DAN TAT CA fixed moi thang -> chinh xac.
+
+### Chi phi phat sinh (variable)
+- Nhung khoan chi ngau nhien trong ngay: an uong, di choi, mua do, v.v.
+- Chi show chi phi phat sinh cua ngay hom nay tren giao dien.
+- Luu SQLite voi category = "variable", date = "yyyy-MM-dd".
+- Du lieu cu (ngay khac) van giu trong database de thong ke.
+
+### Luong thang (salary)
+- Moi thang nguoi dung nhap luong du kien cho thang do.
+- Luu SQLite voi category = "salary", date = "yyyy-MM".
+- Moi thang chi co 1 ban ghi salary.
+- Neu thang nay chua co: nut hien "Cap nhat" -> bam se INSERT moi.
+- Neu thang nay da co: nut hien "Sua" -> bam se UPDATE dung ban ghi do.
+- Truoc day luu SharedPreferences, da chuyen sang DB tu phien lam viec nay.
+
+---
+
+## Database (SQLite)
+
+Cach luu tru nay goi la: SQLite - Co so du lieu quan he (Relational Database)
+- Du lieu to chuc thanh bang (table), hang (row), cot (column)
+- Moi hang = 1 ban ghi (record)
+- Truy van bang SQL (Structured Query Language)
+- Android tich hop san SQLite, khong can cai them gi
+- File DB luu tai: data/data/com.example.gk/databases/expense_db
+- Ten DB: expense_db | Phien ban (version): 2
+
+### Bang: expenses - cot
+
+    id       INTEGER PRIMARY KEY AUTOINCREMENT
+    amount   REAL
+    note     TEXT
+    category TEXT  ->  "variable" | "fixed" | "salary" | "income"
+    date     TEXT  ->  format khac nhau tuy category
+
+### Bang: expenses - du lieu mau
+
+    id | amount  | note                   | category | date
+    ---|---------|------------------------|----------|----------
+    1  | 5000000 | Luong thang 2026-03    | salary   | 2026-03
+    2  | 1500000 | Tien tro               | fixed    | 2026-03
+    3  | 800000  | Dien nuoc              | fixed    | 2026-03
+    4  | 50000   | Ca phe sang            | variable | 2026-03-22
+    5  | 120000  | An trua                | variable | 2026-03-22
+    6  | 5000000 | Luong thang 2026-04    | salary   | 2026-04
+    7  | 1500000 | Tien tro               | fixed    | 2026-04
+    8  | 200000  | Di choi                | variable | 2026-04-01
+
+So du = (5M + 5M) - (1.5M + 0.8M + 0.05M + 0.12M + 1.5M + 0.2M) = 5,830,000 d
+
+### Cac ham chinh trong DatabaseHelper.java
+
+    addExpense(amount, note, category, date)     - them ban ghi moi
+    deleteExpense(id)                            - xoa ban ghi theo id
+    updateExpenseAmount(id, newAmount)           - sua so tien theo id
+    getFixedExpenses()                           - lay tat ca category="fixed" (moi thang, dung cho balance)
+    getFixedExpensesForMonth(month)              - lay category="fixed" cua dung thang "yyyy-MM" (dung cho UI tab)
+    getVariableExpenses(date)                    - lay category="variable" theo ngay
+    getIncomes()                                 - lay tat ca category="income"
+    getSalaryForMonth(month)                     - lay luong cua thang "yyyy-MM"
+    getTotalForDate(date)                        - tong variable ngay do + tong tat ca fixed
+    getTotalVariableForDate(date)                - chi tong variable ngay do
+    getTotalIncome()                             - tong tat ca income
+    getTotalBalanceAllTime()                     - So du = tong salary - tong (variable+fixed moi thang)
+
+---
+
+## Giao dien
+
+### activity_main.xml
+- Toolbar tren cung
+- FrameLayout (fragmentContainer): chua fragment hien tai
+- BottomNavigationView (bottomNav): Dashboard | Thong ke
+
+### fragment_dashboard.xml
+
+CARD SO DU:
+- textBalance: hien so du hien tai (tinh tren tat ca cac thang)
+
+CARD LUONG & THU NHAP:
+- editSalary: nhap luong thang nay
+- buttonUpdateSalary: "Cap nhat" neu chua co luong thang nay / "Sua" neu da co
+
+CARD THEM CHI TIEU NHANH:
+- editAmount: nhap so tien
+- editNote: nhap noi dung
+- spinnerCategory: chon loai -> Phat sinh (variable) / Co dinh (fixed)
+- buttonAdd: xac nhan them
+
+TABS:
+- tabChiTieu: "CHI TIEU HOM NAY" -> hien danh sach variable hom nay
+- tabThuNhap: "CHI PHI CO DINH" -> hien danh sach fixed
+
+DANH SACH:
+- recyclerExpenses: RecyclerView hien thi danh sach
+
+FOOTER:
+- textTotalToday: Tong chi tieu hom nay
+- textRemaining: So du rong hien tai (da tru chi tieu)
+
+### item_expense.xml (moi hang trong danh sach)
+- textNote: noi dung khoan chi
+- textTime: ngay (variable) hoac "Hang thang" (fixed)
+- textAmount: so tien format "1,000,000 d"
+- Bam vao item -> AlertDialog xac nhan xoa -> xoa khoi DB -> cap nhat lai danh sach va so du
+
+---
+
+## Logic chinh
+
+### Tinh so du
+    So du = SUM(amount WHERE category='salary') - SUM(amount WHERE category IN ('variable','fixed'))
+
+### Nut Cap nhat / Sua
+    Mo fragment -> getSalaryForMonth(yyyy-MM)
+      neu null   -> setText("Cap nhat"), currentSalaryId = -1
+      neu co     -> setText("Sua"), dien san so tien cu, currentSalaryId = id
+    
+    Bam nut:
+      neu currentSalaryId == -1 -> addExpense -> cap nhat currentSalaryId, doi nut thanh "Sua"
+      neu currentSalaryId != -1 -> updateExpenseAmount(id, soluong moi)
+
+### Xoa khoan chi
+    Bam vao item trong RecyclerView
+    -> AlertDialog: "Ban muon xoa khoan 'note' khong?"
+    -> Bam Xoa: dbHelper.deleteExpense(id) -> loadData() -> updateSummary()
+    -> Bam Huy: dong dialog, khong lam gi
+
+### Bang: expenses - gia tri category va date
+
+    category="variable"  date="yyyy-MM-dd"  -> chi phi phat sinh theo ngay
+    category="fixed"     date="yyyy-MM"     -> chi phi co dinh THEO THANG (moi thang tu nhap)
+    category="salary"    date="yyyy-MM"     -> luong thang
+    category="income"    date="yyyy-MM-dd"  -> thu nhap khac (du phong)
+
+---
+
+## Quy tac dat ten
+
+- Bien va ham: camelCase (vi du: totalExpense, addExpense, currentDate)
+- Hang so: UPPER_SNAKE_CASE (vi du: DB_NAME, KEY_SALARY, TABLE_EXPENSES)
+- Lop: PascalCase (vi du: DatabaseHelper, ExpenseAdapter, DashboardFragment)
+- Boolean dat ten dang cau hoi: isShowingFixed, isLoaded
+- Khong dung icon, emoji, ky tu dac biet trong code hoac comment
+- Ten phai ro nghia, nhat quan toan project
+
+---
+
+## Cac man hinh
+
+### Dashboard (DashboardFragment.java)
+- Man hinh chinh, hien thi toan bo thong tin
+- Xu ly tat ca logic: lương, chi tiêu, so du, tab, xoa
+
+### Thong ke (ThongKeFragment.java)
+- Hien tai la placeholder: "Chuc nang dang phat trien"
+- Du dinh: bieu do thong ke theo thang
+
+### Cai dat (CaiDatFragment.java)
+- Da xoa khoi bottom nav
+- File van ton tai nhung khong duoc su dung
+
+### Tab hoat dong
+    tabChiTieu bam -> isShowingFixed = false -> getVariableExpenses(today)
+    tabThuNhap bam -> isShowingFixed = true  -> getFixedExpensesForMonth(currentMonth)
+    Tab dang chon: mau Primary / Tab khong chon: mau TextSecondary
+
+    So du hien tai = Tong tat ca luong da nhap (moi thang) - Tong tat ca chi tieu (fixed + variable)
+    Tong chi tieu hom nay = Chi phi phat sinh cua ngay hom nay (khong tinh fixed)
+    So du rong = So du hien tai (cung la so du toan thoi gian)

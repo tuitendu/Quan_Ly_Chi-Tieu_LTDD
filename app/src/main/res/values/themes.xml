@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.GK" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSurface">@color/colorCard</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorOnSurface">@color/colorTextPrimary</item>
+        <item name="colorOnPrimary">@color/colorBackground</item>
+    </style>
+    <style name="Theme.GK" parent="Base.Theme.GK" />
+</resources>

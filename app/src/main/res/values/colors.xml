@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorBackground">#1A1B2E</color>
+    <color name="colorCard">#252637</color>
+    <color name="colorPrimary">#00C9A7</color>
+    <color name="colorButtonAccent">#845EF7</color>
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextSecondary">#8892A4</color>
+    <color name="colorNegative">#FF6B6B</color>
+    <color name="colorDivider">#2D3748</color>
+    <color name="colorProgressBg">#2D3748</color>
+    <color name="colorNavBg">#1E1F30</color>
+</resources>
