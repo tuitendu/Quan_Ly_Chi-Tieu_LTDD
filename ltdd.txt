@@ -1,4 +1,5 @@
 # Ung dung Quan ly Chi tieu - Dark Mode
+# Cong nghe: Android Native | Java + XML | SQLite | Gradle
 
 ## Y tuong tong the
 
