@@ -1,17 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chức năng Thống kê đang phát triển"
-        android:textColor="@color/colorTextSecondary"
-        android:textSize="16sp"
-        android:gravity="center" />
+        android:orientation="vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="24dp">
 
-</LinearLayout>
+        <!-- Tiêu đề trang -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_thong_ke"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="18dp"/>
+
+        <!-- ===== CARD: Biểu đồ chi tiêu theo ngày ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/colorCard"
+            android:padding="12dp"
+            android:layout_marginBottom="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/label_chi_tieu_theo_ngay"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textDailySubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/label_subtitle_daily_default"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chartDailyExpense"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+
+        <!-- ===== CARD: Biểu đồ tích lũy theo tháng ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/colorCard"
+            android:padding="12dp"
+            android:layout_marginBottom="14dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_tich_luy_theo_thang"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="2dp"/>
+
+            <TextView
+                android:id="@+id/textMonthlySubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/label_tong_tich_luy"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chartMonthlySavings"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+
+        <!-- ===== CARD: Danh sách chi tiêu chi tiết ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/colorCard"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_danh_sach_chi_tiet"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Chọn ngày -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/textSelectedDate"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="13sp"
+                    android:text="@string/label_chon_ngay_mac_dinh"/>
+
+                <Button
+                    android:id="@+id/buttonSelectDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="@string/label_chon_ngay"
+                    android:backgroundTint="@color/colorButtonAccent"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="13sp"
+                    android:minHeight="48dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+            </LinearLayout>
+
+            <!-- Header bảng -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/label_ten_khoan_chi"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="@string/label_so_tien"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/label_loai"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:gravity="end"/>
+            </LinearLayout>
+
+            <!-- Đường kẻ phân cách -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Danh sách chi tiêu -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerExpensesByDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+            <!-- Hiển thị khi không có data -->
+            <TextView
+                android:id="@+id/textEmptyList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_khong_co_chi_tieu"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

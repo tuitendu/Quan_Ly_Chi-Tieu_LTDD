@@ -102,6 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public double getTotalBalanceAllTime() {
         SQLiteDatabase db = this.getReadableDatabase();
         double totalSalary = 0;
+        double totalIncome = 0;
         double totalExpenses = 0;
 
         Cursor c1 = db.rawQuery(
@@ -111,6 +112,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (c1.moveToFirst() && !c1.isNull(0)) totalSalary = c1.getDouble(0);
         c1.close();
 
+        Cursor ci = db.rawQuery(
+                "SELECT SUM(" + COL_AMOUNT + ") FROM " + TABLE_EXPENSES
+                        + " WHERE " + COL_CATEGORY + "=?",
+                new String[]{"income"});
+        if (ci.moveToFirst() && !ci.isNull(0)) totalIncome = ci.getDouble(0);
+        ci.close();
+
         Cursor c2 = db.rawQuery(
                 "SELECT SUM(" + COL_AMOUNT + ") FROM " + TABLE_EXPENSES
                         + " WHERE " + COL_CATEGORY + " IN ('variable', 'fixed')",
@@ -119,7 +127,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         c2.close();
 
         db.close();
-        return totalSalary - totalExpenses;
+        return totalSalary + totalIncome - totalExpenses;
+    }
+
+    public List<Expense> getIncomeForMonth(String month) {
+        List<Expense> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_EXPENSES, null,
+                COL_CATEGORY + "=? AND " + COL_DATE + " LIKE ?",
+                new String[]{"income", month + "%"},
+                null, null, COL_ID + " DESC");
+        if (cursor.moveToFirst()) {
+            do { list.add(cursorToExpense(cursor)); } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
     }
 
     public List<Expense> getFixedExpenses() {
@@ -212,35 +235,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return total;
     }
 
-    public List<Expense> getIncomes() {
-        List<Expense> list = new ArrayList<>();
+    public double getMonthlySavings(String month) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_EXPENSES, null,
-                COL_CATEGORY + "=?", new String[]{"income"},
-                null, null, COL_ID + " DESC");
-        if (cursor.moveToFirst()) {
-            do {
-                list.add(cursorToExpense(cursor));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
+        double salary = 0;
+        double expenses = 0;
+
+        Cursor c1 = db.rawQuery(
+                "SELECT SUM(" + COL_AMOUNT + ") FROM " + TABLE_EXPENSES
+                        + " WHERE " + COL_CATEGORY + "=? AND " + COL_DATE + "=?",
+                new String[]{"salary", month});
+        if (c1.moveToFirst() && !c1.isNull(0)) salary = c1.getDouble(0);
+        c1.close();
+
+        Cursor c2 = db.rawQuery(
+                "SELECT SUM(" + COL_AMOUNT + ") FROM " + TABLE_EXPENSES
+                        + " WHERE " + COL_CATEGORY + "=? AND " + COL_DATE + "=?",
+                new String[]{"fixed", month});
+        if (c2.moveToFirst() && !c2.isNull(0)) expenses += c2.getDouble(0);
+        c2.close();
+
+        Cursor c3 = db.rawQuery(
+                "SELECT SUM(" + COL_AMOUNT + ") FROM " + TABLE_EXPENSES
+                        + " WHERE " + COL_CATEGORY + "=? AND " + COL_DATE + " LIKE ?",
+                new String[]{"variable", month + "-%"});
+        if (c3.moveToFirst() && !c3.isNull(0)) expenses += c3.getDouble(0);
+        c3.close();
+
         db.close();
-        return list;
+        return salary - expenses;
     }
 
-    public double getTotalIncome() {
+    // Lay tat ca chi tieu trong mot ngay cu the (ca variable va fixed cua thang do)
+    public List<Expense> getExpensesForDateDetail(String date) {
+        List<Expense> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        double total = 0;
-        Cursor cursor = db.rawQuery(
-                "SELECT SUM(" + COL_AMOUNT + ") FROM " + TABLE_EXPENSES
-                        + " WHERE " + COL_CATEGORY + "=?",
-                new String[]{"income"});
-        if (cursor.moveToFirst() && !cursor.isNull(0)) {
-            total = cursor.getDouble(0);
+        // Extract yyyy-MM from the full date string
+        String month = date.length() >= 7 ? date.substring(0, 7) : date;
+
+        // Variable expenses for this specific date
+        Cursor c1 = db.query(TABLE_EXPENSES, null,
+                COL_CATEGORY + "=? AND " + COL_DATE + "=?",
+                new String[]{"variable", date},
+                null, null, COL_ID + " DESC");
+        if (c1.moveToFirst()) {
+            do { list.add(cursorToExpense(c1)); } while (c1.moveToNext());
         }
-        cursor.close();
+        c1.close();
+
+        // Fixed expenses for this month
+        Cursor c2 = db.query(TABLE_EXPENSES, null,
+                COL_CATEGORY + "=? AND " + COL_DATE + "=?",
+                new String[]{"fixed", month},
+                null, null, COL_ID + " DESC");
+        if (c2.moveToFirst()) {
+            do { list.add(cursorToExpense(c2)); } while (c2.moveToNext());
+        }
+        c2.close();
+
         db.close();
-        return total;
+        return list;
     }
 
     private Expense cursorToExpense(Cursor cursor) {

@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:baselineAligned="false"
         android:padding="16dp">
 
         <!-- Số dư hiện tại -->
@@ -29,7 +30,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Số dư hiện tại:"
+                    android:text="@string/label_so_du_hien_tai"
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="13sp" />
 
@@ -37,7 +38,7 @@
                     android:id="@+id/textBalance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0 đ"
+                    android:text="@string/label_so_du_default"
                     android:textColor="@color/colorPrimary"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -64,7 +65,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lương &amp; Thu nhập"
+                    android:text="@string/label_luong_thu_nhap"
                     android:textColor="@color/colorTextPrimary"
                     android:textStyle="bold"
                     android:textSize="14sp" />
@@ -72,7 +73,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lương tháng này (dự kiến):"
+                    android:text="@string/label_luong_thang_nay"
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="12sp"
                     android:layout_marginTop="10dp" />
@@ -81,32 +82,114 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:baselineAligned="false"
                     android:layout_marginTop="4dp"
                     android:gravity="center_vertical">
 
                     <EditText
                         android:id="@+id/editSalary"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="48dp"
                         android:layout_weight="1"
-                        android:hint="0"
+                        android:hint="@string/hint_luong"
                         android:inputType="numberDecimal"
+                        android:importantForAutofill="no"
                         android:textColor="@color/colorTextPrimary"
                         android:textColorHint="@color/colorTextSecondary"
                         android:backgroundTint="@color/colorPrimary"
+                        android:paddingStart="4dp"
                         android:layout_marginEnd="8dp" />
 
                     <Button
                         android:id="@+id/buttonUpdateSalary"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cập nhật"
+                        android:layout_height="48dp"
+                        android:minHeight="48dp"
+                        android:text="@string/btn_cap_nhat"
                         android:backgroundTint="@color/colorButtonAccent"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="12sp" />
                 </LinearLayout>
 
+                <!-- Đường kẻ phân cách -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="10dp"/>
 
+                <!-- Thu nhập khác -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_thu_nhap_khac"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="6dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:id="@+id/editIncomeAmount"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_so_tien"
+                        android:inputType="numberDecimal"
+                        android:importantForAutofill="no"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textColorHint="@color/colorTextSecondary"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:paddingStart="4dp"
+                        android:layout_marginEnd="6dp"/>
+
+                    <EditText
+                        android:id="@+id/editIncomeNote"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1.2"
+                        android:hint="@string/hint_mo_ta_thu_nhap"
+                        android:inputType="text"
+                        android:importantForAutofill="no"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textColorHint="@color/colorTextSecondary"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:paddingStart="4dp"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button
+                        android:id="@+id/buttonAddIncome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:minHeight="48dp"
+                        android:text="@string/btn_them_thu_nhap"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorBackground"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textTotalIncome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_tong_thu_nhap_khac"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="6dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerIncomes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginTop="4dp"/>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -129,7 +212,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thêm chi tiêu nhanh"
+                    android:text="@string/label_them_chi_tieu"
                     android:textColor="@color/colorTextPrimary"
                     android:textStyle="bold"
                     android:textSize="14sp" />
@@ -138,6 +221,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:baselineAligned="false"
                     android:layout_marginTop="10dp">
 
                     <LinearLayout
@@ -150,19 +234,21 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Số tiền:"
+                            android:text="@string/label_so_tien_input"
                             android:textColor="@color/colorTextSecondary"
                             android:textSize="12sp" />
 
                         <EditText
                             android:id="@+id/editAmount"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="0"
+                            android:layout_height="48dp"
+                            android:hint="@string/hint_so_tien"
                             android:inputType="numberDecimal"
+                            android:importantForAutofill="no"
                             android:textColor="@color/colorTextPrimary"
                             android:textColorHint="@color/colorTextSecondary"
-                            android:backgroundTint="@color/colorPrimary" />
+                            android:backgroundTint="@color/colorPrimary"
+                            android:paddingStart="4dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -174,18 +260,21 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nội dung:"
+                            android:text="@string/label_noi_dung_input"
                             android:textColor="@color/colorTextSecondary"
                             android:textSize="12sp" />
 
                         <EditText
                             android:id="@+id/editNote"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Ăn trưa..."
+                            android:layout_height="48dp"
+                            android:hint="@string/hint_noi_dung"
+                            android:inputType="text"
+                            android:importantForAutofill="no"
                             android:textColor="@color/colorTextPrimary"
                             android:textColorHint="@color/colorTextSecondary"
-                            android:backgroundTint="@color/colorPrimary" />
+                            android:backgroundTint="@color/colorPrimary"
+                            android:paddingStart="4dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -193,6 +282,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:baselineAligned="false"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical">
 
@@ -206,22 +296,24 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Loại:"
+                            android:text="@string/label_loai_input"
                             android:textColor="@color/colorTextSecondary"
                             android:textSize="12sp" />
 
                         <Spinner
                             android:id="@+id/spinnerCategory"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
+                            android:minHeight="48dp"
                             android:backgroundTint="@color/colorPrimary" />
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/buttonAdd"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="+ Thêm"
+                        android:layout_height="48dp"
+                        android:minHeight="48dp"
+                        android:text="@string/btn_them"
                         android:backgroundTint="@color/colorButtonAccent"
                         android:textColor="@color/colorTextPrimary"
                         android:layout_marginTop="16dp" />
@@ -235,6 +327,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:baselineAligned="false"
             android:background="@color/colorCard"
             android:layout_marginTop="12dp">
 
@@ -243,7 +336,7 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="CHI TIÊU HÔM NAY"
+                android:text="@string/tab_chi_tieu_hom_nay"
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
@@ -259,7 +352,7 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="CHI PHÍ CỐ ĐỊNH"
+                android:text="@string/tab_chi_phi_co_dinh"
                 android:gravity="center"
                 android:textColor="@color/colorTextSecondary"
                 android:textStyle="bold"
@@ -287,7 +380,7 @@
                 android:id="@+id/textTotalToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tổng chi tiêu hôm nay: 0 đ"
+                android:text="@string/label_tong_chi_hom_nay"
                 android:textColor="@color/colorTextPrimary"
                 android:textStyle="bold"
                 android:textSize="13sp" />
@@ -296,7 +389,7 @@
                 android:id="@+id/textRemaining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Số dư ròng hiện tại (đã trừ chi tiêu): 0 đ"
+                android:text="@string/label_so_du_rong"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 android:textSize="13sp"

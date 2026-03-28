@@ -3,4 +3,47 @@
     <string name="nav_dashboard">Dashboard</string>
     <string name="nav_thong_ke">Thống kê</string>
     <string name="nav_cai_dat">Cài đặt</string>
+
+    <!-- Thống kê -->
+    <string name="title_thong_ke">THỐNG KÊ CHI TIÊU</string>
+    <string name="label_chi_tieu_theo_ngay">Chi tiêu theo Ngày</string>
+    <string name="label_tich_luy_theo_thang">Tích lũy theo Tháng</string>
+    <string name="label_tong_tich_luy">Tổng tiền tích lũy kế</string>
+    <string name="label_danh_sach_chi_tiet">Danh sách Chi tiêu Chi tiết</string>
+    <string name="label_chon_ngay">Chọn ngày</string>
+    <string name="label_ten_khoan_chi">Tên khoản chi</string>
+    <string name="label_so_tien">Số tiền</string>
+    <string name="label_loai">Loại</string>
+    <string name="value_phat_sinh">Phát sinh</string>
+    <string name="value_co_dinh">Cố định</string>
+    <string name="value_luong">Lương</string>
+    <string name="msg_xem_tai_trang_chu">Hãy vào trang chủ để xóa khoản chi này.</string>
+    <string name="label_subtitle_daily_default">Tổng chi tiêu hôm nay: 0 đ</string>
+    <string name="label_chon_ngay_mac_dinh">Chọn ngày: Hôm nay</string>
+    <string name="label_khong_co_chi_tieu">Không có chi tiêu nào trong ngày này</string>
+
+    <!-- Dashboard -->
+    <string name="label_so_du_hien_tai">Số dư hiện tại:</string>
+    <string name="label_so_du_default">0 đ</string>
+    <string name="label_luong_thu_nhap">Lương &amp; Thu nhập</string>
+    <string name="label_luong_thang_nay">Lương tháng này (dự kiến):</string>
+    <string name="hint_luong">0</string>
+    <string name="btn_cap_nhat">Cập nhật</string>
+    <string name="label_them_chi_tieu">Thêm chi tiêu nhanh</string>
+    <string name="label_so_tien_input">Số tiền:</string>
+    <string name="hint_so_tien">0</string>
+    <string name="label_noi_dung_input">Nội dung:</string>
+    <string name="hint_noi_dung">Cà phê, ăn trưa…</string>
+    <string name="label_loai_input">Loại:</string>
+    <string name="btn_them">+ Thêm</string>
+    <string name="tab_chi_tieu_hom_nay">CHI TIÊU HÔM NAY</string>
+    <string name="tab_chi_phi_co_dinh">CHI PHÍ CỐ ĐỊNH</string>
+    <string name="label_tong_chi_hom_nay">Tổng chi tiêu hôm nay: 0 đ</string>
+    <string name="label_so_du_rong">Số dư ròng hiện tại: 0 đ</string>
+
+    <!-- Thu nhập khác -->
+    <string name="label_thu_nhap_khac">Thu nhập khác</string>
+    <string name="hint_mo_ta_thu_nhap">Lương mềm, thưởng…</string>
+    <string name="btn_them_thu_nhap">+ Thêm</string>
+    <string name="label_tong_thu_nhap_khac">Tổng: 0 đ</string>
 </resources>
